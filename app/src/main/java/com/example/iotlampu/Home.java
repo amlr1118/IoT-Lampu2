@@ -1,11 +1,14 @@
 package com.example.iotlampu;
 
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -15,10 +18,14 @@ import android.widget.Toolbar;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Calendar;
 import java.util.StringJoiner;
@@ -37,7 +44,7 @@ public class Home extends AppCompatActivity {
     private ToggleButton tglLampu3;
     private ToggleButton tglLampu4;
 
-
+    private String id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +57,8 @@ public class Home extends AppCompatActivity {
             return insets;
         });
 
+        id = "1";
+
         tVLmpAktif1 = findViewById(R.id.tVLmpAktif1);
         tVLmpMati1 = findViewById(R.id.tVLmpMati1);
 
@@ -58,8 +67,41 @@ public class Home extends AppCompatActivity {
         tglLampu1 = findViewById(R.id.tglLampu1);
         tglLampu2 = findViewById(R.id.tglLampu2);
         tglLampu3 = findViewById(R.id.tglLampu3);
-        tglLampu4 = findViewById(R.id.tglLampu4);
+        //tglLampu4 = findViewById(R.id.tglLampu4);
 
+
+        tglLampu1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (tglLampu1.isChecked()){
+                    setRelay1(1);
+                }else {
+                    setRelay1(0);
+                }
+            }
+        });
+
+        tglLampu2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (tglLampu2.isChecked()){
+                    setRelay2(1);
+                }else {
+                    setRelay2(0);
+                }
+            }
+        });
+
+        tglLampu3.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (tglLampu3.isChecked()){
+                    setRelay3(1);
+                }else {
+                    setRelay3(0);
+                }
+            }
+        });
 
         tVLmpAktif1.setOnClickListener(view -> {
             showTimePickerDialog();
@@ -76,6 +118,347 @@ public class Home extends AppCompatActivity {
             intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "id-ID"); // Atur bahasa ke Bahasa Indonesia
             startActivityForResult(intent, 100);
         });
+
+        cekStatusRelay1();
+        cekStatusRelay2();
+        cekStatusRelay3();
+    }
+
+    private void cekStatusRelay1(){
+        String url = getString(R.string.api_server)+"/baca-relay1";
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Http http = new Http(Home.this, url);
+                http.send();
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Integer code = http.getStatusCode();
+                        if (code == 200){
+                            try {
+                                // Mengambil response sebagai string dan mengonversinya menjadi integer
+                                String responseString = http.getResponse();
+                                int relay = Integer.parseInt(responseString.trim());
+
+                                if (relay > 0 ){
+                                    tglLampu1.setChecked(true);
+                                }else{
+                                    tglLampu1.setChecked(false);
+                                }
+
+                            } catch (NumberFormatException e) {
+                                e.printStackTrace();
+                                Toast.makeText(Home.this, "Error parsing response", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(Home.this, "Error "+code, Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+            }
+        }).start();
+    }
+
+    private void cekStatusRelay2(){
+        String url = getString(R.string.api_server)+"/baca-relay2";
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Http http = new Http(Home.this, url);
+                http.send();
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Integer code = http.getStatusCode();
+                        if (code == 200){
+                            try {
+                                // Mengambil response sebagai string dan mengonversinya menjadi integer
+                                String responseString = http.getResponse();
+                                int relay = Integer.parseInt(responseString.trim());
+
+                                if (relay > 0 ){
+                                    tglLampu2.setChecked(true);
+                                }else{
+                                    tglLampu2.setChecked(false);
+                                }
+
+                            } catch (NumberFormatException e) {
+                                e.printStackTrace();
+                                Toast.makeText(Home.this, "Error parsing response", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(Home.this, "Error "+code, Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+            }
+        }).start();
+    }
+
+    private void cekStatusRelay3(){
+        String url = getString(R.string.api_server)+"/baca-relay3";
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Http http = new Http(Home.this, url);
+                http.send();
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Integer code = http.getStatusCode();
+                        if (code == 200){
+                            try {
+                                // Mengambil response sebagai string dan mengonversinya menjadi integer
+                                String responseString = http.getResponse();
+                                int relay = Integer.parseInt(responseString.trim());
+
+                                if (relay > 0 ){
+                                    tglLampu3.setChecked(true);
+                                }else{
+                                    tglLampu3.setChecked(false);
+                                }
+
+                            } catch (NumberFormatException e) {
+                                e.printStackTrace();
+                                Toast.makeText(Home.this, "Error parsing response", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(Home.this, "Error "+code, Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+            }
+        }).start();
+    }
+
+    private void setRelay1(int relay){
+        JSONObject params = new JSONObject();
+        try {
+            params.put("relay1", relay);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String data = params.toString();
+        String url = getString(R.string.api_server)+"/update-relay1/"+id;
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Http http = new Http(Home.this, url);
+                http.setMethod("put");
+                http.setData(data);
+                http.send();
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Integer code = http.getStatusCode();
+                        if (code == 200){
+                            if (relay > 0 ){
+                                tglLampu1.setChecked(true);
+
+                            }else{
+                                tglLampu1.setChecked(false);
+                            }
+                            try {
+                                JSONObject response = new JSONObject(http.getResponse());
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        else if (code == 422) {
+                            try {
+                                JSONObject response = new JSONObject(http.getResponse());
+                                String msg = response.getString("message");
+                                alertFail(""+msg);
+                                //Toast.makeText(Register.this, ""+msg, Toast.LENGTH_LONG).show();
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                        else if (code == 401) {
+                            try {
+                                JSONObject response = new JSONObject(http.getResponse());
+                                String msg = response.getString("message");
+                                alertFail(""+msg);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                        else{
+                            Toast.makeText(Home.this, "Error "+code, Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+            }
+        }).start();
+
+
+    }
+
+    private void setRelay2(int relay){
+        JSONObject params = new JSONObject();
+        try {
+            params.put("relay2", relay);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String data = params.toString();
+        String url = getString(R.string.api_server)+"/update-relay2/"+id;
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Http http = new Http(Home.this, url);
+                http.setMethod("put");
+                http.setData(data);
+                http.send();
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Integer code = http.getStatusCode();
+                        if (code == 200){
+                            if (relay > 0 ){
+                                tglLampu2.setChecked(true);
+
+                            }else{
+                                tglLampu2.setChecked(false);
+                            }
+                            try {
+                                JSONObject response = new JSONObject(http.getResponse());
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        else if (code == 422) {
+                            try {
+                                JSONObject response = new JSONObject(http.getResponse());
+                                String msg = response.getString("message");
+                                alertFail(""+msg);
+                                //Toast.makeText(Register.this, ""+msg, Toast.LENGTH_LONG).show();
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                        else if (code == 401) {
+                            try {
+                                JSONObject response = new JSONObject(http.getResponse());
+                                String msg = response.getString("message");
+                                alertFail(""+msg);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                        else{
+                            Toast.makeText(Home.this, "Error "+code, Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+            }
+        }).start();
+
+
+    }
+
+    private void setRelay3(int relay){
+        JSONObject params = new JSONObject();
+        try {
+            params.put("relay3", relay);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String data = params.toString();
+        String url = getString(R.string.api_server)+"/update-relay3/"+id;
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Http http = new Http(Home.this, url);
+                http.setMethod("put");
+                http.setData(data);
+                http.send();
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Integer code = http.getStatusCode();
+                        if (code == 200){
+                            if (relay > 0 ){
+                                tglLampu3.setChecked(true);
+
+                            }else{
+                                tglLampu3.setChecked(false);
+                            }
+                            try {
+                                JSONObject response = new JSONObject(http.getResponse());
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        else if (code == 422) {
+                            try {
+                                JSONObject response = new JSONObject(http.getResponse());
+                                String msg = response.getString("message");
+                                alertFail(""+msg);
+                                //Toast.makeText(Register.this, ""+msg, Toast.LENGTH_LONG).show();
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                        else if (code == 401) {
+                            try {
+                                JSONObject response = new JSONObject(http.getResponse());
+                                String msg = response.getString("message");
+                                alertFail(""+msg);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                        else{
+                            Toast.makeText(Home.this, "Error "+code, Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+            }
+        }).start();
+
+
+    }
+
+    private void alertFail(String s) {
+        new AlertDialog.Builder(this)
+                .setTitle("Failed")
+                .setIcon(R.drawable.baseline_error_24)
+                .setMessage(s)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                }).show();
     }
 
     private void showTimePickerDialog() {
@@ -118,25 +501,20 @@ public class Home extends AppCompatActivity {
             // Periksa teks dan aktifkan lampu yang sesuai
             if (text.equals("lampu 1 aktif")){
                 tglLampu1.setChecked(true);
-            } else if (text.equals("lampu 2 aktif")){
+            }else if (text.equals("lampu 1 mati")){
+                tglLampu1.setChecked(false);
+            }else if (text.equals("lampu 2 aktif")){
                 tglLampu2.setChecked(true);
+            } else if (text.equals("lampu 2 mati")){
+                tglLampu2.setChecked(false);
             } else if (text.equals("lampu 3 aktif")){
                 tglLampu3.setChecked(true);
-            } else if (text.equals("lampu 4 aktif")){
-                tglLampu4.setChecked(true);
+            } else if (text.equals("lampu 3 mati")){
+                tglLampu3.setChecked(false);
             }else {
                 Toast.makeText(this, "Perintah tidak dikenali !", Toast.LENGTH_LONG).show();
             }
 
-            if (text.equals("lampu 1 mati")){
-                tglLampu1.setChecked(false);
-            } else if (text.equals("lampu 2 mati")){
-                tglLampu2.setChecked(false);
-            } else if (text.equals("lampu 3 mati")){
-                tglLampu3.setChecked(false);
-            } else if (text.equals("lampu 4 mati")){
-                tglLampu4.setChecked(false);
-            }
         }
     }
 }

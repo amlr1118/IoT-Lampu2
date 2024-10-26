@@ -94,29 +94,6 @@
         app:layout_constraintStart_toEndOf="@+id/textView5"
         app:layout_constraintTop_toBottomOf="@+id/tglLampu2" />
 
-    <TextView
-        android:id="@+id/textView6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="35dp"
-        android:text="Lampu 4"
-        android:textColor="@color/primaryDarkColor"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/tglLampu4"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView5" />
-
-    <ToggleButton
-        android:id="@+id/tglLampu4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="ToggleButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textView6"
-        app:layout_constraintTop_toBottomOf="@+id/tglLampu3" />
-
     <ScrollView
         android:id="@+id/scrV"
         android:layout_width="409dp"
@@ -126,7 +103,7 @@
         android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tglLampu4">
+        app:layout_constraintTop_toBottomOf="@+id/tglLampu3">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -137,13 +114,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
                 app:cardBackgroundColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
-                >
+                app:layout_constraintTop_toTopOf="parent">
 
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -333,59 +310,9 @@
                         app:layout_constraintStart_toEndOf="@+id/tVLmpAktif3"
                         app:layout_constraintTop_toBottomOf="@+id/textView13" />
 
-                    <TextView
-                        android:id="@+id/textView16"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginEnd="16dp"
-                        android:text="Set Waktu Lampu 4"
-                        android:textColor="@color/primaryDarkColor"
-                        android:textStyle="bold"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tVLmpAktif3" />
-
-                    <TextView
-                        android:id="@+id/tvLmpAktif4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginEnd="16dp"
-                        android:layout_marginBottom="16dp"
-                        android:drawableTop="@drawable/baseline_access_time_24"
-                        android:text="Waktu belum diatur"
-                        android:textColor="@color/primaryDarkColor"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/tvLmpMati4"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView16" />
-
-                    <TextView
-                        android:id="@+id/tvLmpMati4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginEnd="16dp"
-                        android:layout_marginBottom="16dp"
-                        android:drawableTop="@drawable/baseline_access_time_24"
-                        android:text="Waktu belum diatur"
-                        android:textColor="@color/primaryDarkColor"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/tvLmpAktif4"
-                        app:layout_constraintTop_toBottomOf="@+id/textView16" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.cardview.widget.CardView>
-
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
