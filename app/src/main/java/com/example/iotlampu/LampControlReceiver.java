@@ -24,6 +24,24 @@ public class LampControlReceiver extends BroadcastReceiver {
                 Intent broadcastIntent = new Intent("ACTION_LAMPU_STATUS");
                 broadcastIntent.putExtra("status", "Lampu 1 mati");
                 LocalBroadcastManager.getInstance(context).sendBroadcast(broadcastIntent);
+            } else if (action.equals("lampu2_aktif")) {
+                Intent broadcastIntent = new Intent("ACTION_LAMPU_STATUS");
+                broadcastIntent.putExtra("status", "Lampu 2 aktif");
+                LocalBroadcastManager.getInstance(context).sendBroadcast(broadcastIntent);
+            } else if (action.equals("lampu2_mati")) {
+                Intent broadcastIntent = new Intent("ACTION_LAMPU_STATUS");
+                broadcastIntent.putExtra("status", "Lampu 2 mati");
+                LocalBroadcastManager.getInstance(context).sendBroadcast(broadcastIntent);
+            }
+            else if (action.equals("lampu3_aktif")) {
+                Intent broadcastIntent = new Intent("ACTION_LAMPU_STATUS");
+                broadcastIntent.putExtra("status", "Lampu 3 aktif");
+                LocalBroadcastManager.getInstance(context).sendBroadcast(broadcastIntent);
+            }
+            else if (action.equals("lampu3_mati")) {
+                Intent broadcastIntent = new Intent("ACTION_LAMPU_STATUS");
+                broadcastIntent.putExtra("status", "Lampu 3 mati");
+                LocalBroadcastManager.getInstance(context).sendBroadcast(broadcastIntent);
             }
         }
     }

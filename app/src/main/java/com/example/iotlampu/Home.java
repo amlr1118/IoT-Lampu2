@@ -73,6 +73,19 @@ public class Home extends AppCompatActivity {
                 }else if (status.equals("Lampu 1 mati")){
                     setRelay1(0);
                 }
+                else if (status.equals("Lampu 2 aktif")){
+                    setRelay2(1);
+                }
+
+                else if (status.equals("Lampu 2 mati")){
+                    setRelay2(0);
+                }
+
+                else if (status.equals("Lampu 3 aktif")){
+                    setRelay3(1);
+                }else if (status.equals("Lampu 3 mati")){
+                    setRelay3(0);
+                }
             }
         }
     };
@@ -201,24 +214,64 @@ public class Home extends AppCompatActivity {
         SharedPreferences sharedPref = getSharedPreferences("LampPreferences", MODE_PRIVATE);
 
         // Memuat waktu yang disimpan
-        String aktifTime = sharedPref.getString("lampu1_aktif", "Belum On diatur");
-        String matiTime = sharedPref.getString("lampu1_mati", "Belum Off diatur");
+        String aktifTime1 = sharedPref.getString("lampu1_aktif", "Waktu Belum On diatur");
+        String matiTime1 = sharedPref.getString("lampu1_mati", "Waktu Belum Off diatur");
 
-        tVLmpAktif1.setText(aktifTime);
-        tVLmpMati1.setText(matiTime);
+        String aktifTime2 = sharedPref.getString("lampu2_aktif", "Waktu Belum On diatur");
+        String matiTime2 = sharedPref.getString("lampu2_mati", "Waktu Belum Off diatur");
+
+        String aktifTime3 = sharedPref.getString("lampu3_aktif", "Waktu Belum On diatur");
+        String matiTime3 = sharedPref.getString("lampu3_mati", "Waktu Belum Off diatur");
+
+        tVLmpAktif1.setText(aktifTime1);
+        tVLmpMati1.setText(matiTime1);
+
+        tVLmpAktif2.setText(aktifTime2);
+        tVLmpMati2.setText(matiTime2);
+
+        tVLmpAktif3.setText(aktifTime3);
+        tVLmpMati3.setText(matiTime3);
 
         // Jika waktu telah diatur, maka jadwalkan ulang alarm
-        if (!aktifTime.equals("Belum On diatur")) {
-            String[] timeParts = aktifTime.split(":");
+        if (!aktifTime1.equals("Waktu Belum On diatur")) {
+            String[] timeParts = aktifTime1.split(":");
             int hour = Integer.parseInt(timeParts[0]);
             int minute = Integer.parseInt(timeParts[1]);
             scheduleAlarm("lampu1_aktif", hour, minute);
         }
-        if (!matiTime.equals("Belum Off diatur")) {
-            String[] timeParts = matiTime.split(":");
+        if (!matiTime1.equals("Waktu Belum Off diatur")) {
+            String[] timeParts = matiTime1.split(":");
             int hour = Integer.parseInt(timeParts[0]);
             int minute = Integer.parseInt(timeParts[1]);
             scheduleAlarm("lampu1_mati", hour, minute);
+        }
+
+        // Jika waktu telah diatur, maka jadwalkan ulang alarm
+        if (!aktifTime2.equals("Waktu Belum On diatur")) {
+            String[] timeParts = aktifTime2.split(":");
+            int hour = Integer.parseInt(timeParts[0]);
+            int minute = Integer.parseInt(timeParts[1]);
+            scheduleAlarm("lampu2_aktif", hour, minute);
+        }
+        if (!matiTime2.equals("Waktu Belum Off diatur")) {
+            String[] timeParts = matiTime2.split(":");
+            int hour = Integer.parseInt(timeParts[0]);
+            int minute = Integer.parseInt(timeParts[1]);
+            scheduleAlarm("lampu2_mati", hour, minute);
+        }
+
+        // Jika waktu telah diatur, maka jadwalkan ulang alarm
+        if (!aktifTime3.equals("Waktu Belum On diatur")) {
+            String[] timeParts = aktifTime3.split(":");
+            int hour = Integer.parseInt(timeParts[0]);
+            int minute = Integer.parseInt(timeParts[1]);
+            scheduleAlarm("lampu3_aktif", hour, minute);
+        }
+        if (!matiTime3.equals("Waktu Belum Off diatur")) {
+            String[] timeParts = matiTime3.split(":");
+            int hour = Integer.parseInt(timeParts[0]);
+            int minute = Integer.parseInt(timeParts[1]);
+            scheduleAlarm("lampu3_mati", hour, minute);
         }
     }
 
@@ -274,6 +327,30 @@ public class Home extends AppCompatActivity {
                             tVLmpMati1.setText(time);
                             key = "lampu1_mati";
                             editor.putString("lampu1_mati", time);
+                            editor.apply();
+                        }else if (onof.equals("aktif2")){
+                            tVLmpAktif2.setText(time);
+                            key = "lampu2_aktif";
+                            editor.putString("lampu2_aktif", time);
+                            editor.apply();
+
+                        }else if (onof.equals("mati2")){
+                            tVLmpMati2.setText(time);
+                            key = "lampu2_mati";
+                            editor.putString("lampu2_mati", time);
+                            editor.apply();
+                        }
+
+                        else if (onof.equals("aktif3")){
+                            tVLmpAktif3.setText(time);
+                            key = "lampu2_aktif";
+                            editor.putString("lampu3_aktif", time);
+                            editor.apply();
+
+                        }else if (onof.equals("mati3")){
+                            tVLmpMati3.setText(time);
+                            key = "lampu2_mati";
+                            editor.putString("lampu3_mati", time);
                             editor.apply();
                         }
 
