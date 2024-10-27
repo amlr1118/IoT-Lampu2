@@ -1,11 +1,20 @@
 package com.example.iotlampu;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.speech.RecognizerIntent;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -23,6 +32,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,6 +47,12 @@ public class Home extends AppCompatActivity {
     private TextView tVLmpAktif1;
     private TextView tVLmpMati1;
 
+    private TextView tVLmpAktif2;
+    private TextView tVLmpMati2;
+
+    private TextView tVLmpAktif3;
+    private TextView tVLmpMati3;
+
     private ImageView imgVSuara;
 
     private ToggleButton tglLampu1;
@@ -45,6 +61,21 @@ public class Home extends AppCompatActivity {
     private ToggleButton tglLampu4;
 
     private String id;
+    private String onof;
+
+    private BroadcastReceiver lampuStatusReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String status = intent.getStringExtra("status");
+            if (status != null) {
+                if (status.equals("Lampu 1 aktif")){
+                    setRelay1(1);
+                }else if (status.equals("Lampu 1 mati")){
+                    setRelay1(0);
+                }
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,18 +88,66 @@ public class Home extends AppCompatActivity {
             return insets;
         });
 
+        LocalBroadcastManager.getInstance(this).registerReceiver(lampuStatusReceiver,
+                new IntentFilter("ACTION_LAMPU_STATUS"));
+
+
         id = "1";
 
         tVLmpAktif1 = findViewById(R.id.tVLmpAktif1);
         tVLmpMati1 = findViewById(R.id.tVLmpMati1);
+
+        tVLmpAktif2 = findViewById(R.id.tVLmpAktif2);
+        tVLmpMati2 = findViewById(R.id.tVLmpMati2);
+
+        tVLmpAktif3 = findViewById(R.id.tVLmpAktif3);
+        tVLmpMati3 = findViewById(R.id.tvLmpMati3);
 
         imgVSuara = findViewById(R.id.imgVSuara);
 
         tglLampu1 = findViewById(R.id.tglLampu1);
         tglLampu2 = findViewById(R.id.tglLampu2);
         tglLampu3 = findViewById(R.id.tglLampu3);
-        //tglLampu4 = findViewById(R.id.tglLampu4);
 
+
+
+        tVLmpAktif1.setOnClickListener(v -> {
+            onof = "aktif1";
+            showTimePickerDialog();
+
+        });
+
+        tVLmpMati1.setOnClickListener(v -> {
+            onof = "mati1";
+            showTimePickerDialog();
+
+        });
+
+        tVLmpAktif2.setOnClickListener(v -> {
+            onof = "aktif2";
+            showTimePickerDialog();
+
+        });
+
+        tVLmpMati2.setOnClickListener(v -> {
+            onof = "mati2";
+            showTimePickerDialog();
+
+        });
+
+        tVLmpAktif3.setOnClickListener(v -> {
+            onof = "aktif3";
+            showTimePickerDialog();
+
+        });
+
+        tVLmpMati3.setOnClickListener(v -> {
+            onof = "mati3";
+            showTimePickerDialog();
+
+        });
+
+        loadSavedTime();
 
         tglLampu1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -103,13 +182,7 @@ public class Home extends AppCompatActivity {
             }
         });
 
-        tVLmpAktif1.setOnClickListener(view -> {
-            showTimePickerDialog();
-        });
 
-        tVLmpMati1.setOnClickListener(view -> {
-            showTimePickerDialog();
-        });
 
         imgVSuara.setOnClickListener(view -> {
             Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
@@ -122,6 +195,92 @@ public class Home extends AppCompatActivity {
         cekStatusRelay1();
         cekStatusRelay2();
         cekStatusRelay3();
+    }
+
+    private void loadSavedTime() {
+        SharedPreferences sharedPref = getSharedPreferences("LampPreferences", MODE_PRIVATE);
+
+        // Memuat waktu yang disimpan
+        String aktifTime = sharedPref.getString("lampu1_aktif", "Belum On diatur");
+        String matiTime = sharedPref.getString("lampu1_mati", "Belum Off diatur");
+
+        tVLmpAktif1.setText(aktifTime);
+        tVLmpMati1.setText(matiTime);
+
+        // Jika waktu telah diatur, maka jadwalkan ulang alarm
+        if (!aktifTime.equals("Belum On diatur")) {
+            String[] timeParts = aktifTime.split(":");
+            int hour = Integer.parseInt(timeParts[0]);
+            int minute = Integer.parseInt(timeParts[1]);
+            scheduleAlarm("lampu1_aktif", hour, minute);
+        }
+        if (!matiTime.equals("Belum Off diatur")) {
+            String[] timeParts = matiTime.split(":");
+            int hour = Integer.parseInt(timeParts[0]);
+            int minute = Integer.parseInt(timeParts[1]);
+            scheduleAlarm("lampu1_mati", hour, minute);
+        }
+    }
+
+    private void scheduleAlarm(String action, int hour, int minute) {
+        //AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+
+            if (!alarmManager.canScheduleExactAlarms()) {
+                Intent intent = new Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM);
+                startActivity(intent);
+            }
+        }
+
+        Intent intent = new Intent(this, LampControlReceiver.class);
+        intent.setAction(action);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.SECOND, 0);
+
+
+        if (alarmManager != null) {
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+        }
+    }
+
+    private void showTimePickerDialog() {
+        // Ambil waktu saat ini
+        Calendar calendar = Calendar.getInstance();
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+
+        // Tampilkan TimePickerDialog
+        TimePickerDialog timePickerDialog = new TimePickerDialog(Home.this,
+                new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        String key = "";
+                        SharedPreferences sharedPref = getSharedPreferences("LampPreferences", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPref.edit();
+                        String time = String.format("%02d:%02d", hourOfDay, minute);
+                        // Format waktu yang dipilih ke dalam format HH:mm dan tampilkan di TextView
+                        if (onof.equals("aktif1")){
+                            tVLmpAktif1.setText(time);
+                            key = "lampu1_aktif";
+                            editor.putString("lampu1_aktif", time);
+                            editor.apply();
+                            //log.d("La Idu", "Waktu aktif disimpan: " + time);
+                        }else if (onof.equals("mati1")){
+                            tVLmpMati1.setText(time);
+                            key = "lampu1_mati";
+                            editor.putString("lampu1_mati", time);
+                            editor.apply();
+                        }
+
+                        scheduleAlarm(key, hourOfDay, minute);
+                    }
+                }, hour, minute, true); // True untuk format 24 jam, false untuk 12 jam AM/PM
+        timePickerDialog.show();
     }
 
     private void cekStatusRelay1(){
@@ -461,23 +620,7 @@ public class Home extends AppCompatActivity {
                 }).show();
     }
 
-    private void showTimePickerDialog() {
-        // Ambil waktu saat ini
-        Calendar calendar = Calendar.getInstance();
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        int minute = calendar.get(Calendar.MINUTE);
 
-        // Tampilkan TimePickerDialog
-        TimePickerDialog timePickerDialog = new TimePickerDialog(Home.this,
-                new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        // Format waktu yang dipilih ke dalam format HH:mm dan tampilkan di TextView
-                        tVLmpAktif1.setText(String.format("%02d:%02d", hourOfDay, minute));
-                    }
-                }, hour, minute, true); // True untuk format 24 jam, false untuk 12 jam AM/PM
-        timePickerDialog.show();
-    }
 
 
 
@@ -516,5 +659,11 @@ public class Home extends AppCompatActivity {
             }
 
         }
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Batalkan pendaftaran receiver saat activity dihancurkan
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(lampuStatusReceiver);
     }
 }
