@@ -731,9 +731,38 @@ public class Home extends AppCompatActivity {
                 tglLampu3.setChecked(true);
             } else if (text.equals("lampu 3 mati")){
                 tglLampu3.setChecked(false);
-            }else {
+            }else if (text.equals("lampu 1 dan 2 aktif")){
+                tglLampu1.setChecked(true);
+                tglLampu2.setChecked(true);
+            }else if (text.equals("lampu 1 dan 2 mati")){
+                tglLampu1.setChecked(false);
+                tglLampu2.setChecked(false);
+            }else if (text.equals("lampu 1 dan 3 aktif")){
+                tglLampu1.setChecked(true);
+                tglLampu3.setChecked(true);
+            }else if (text.equals("lampu 1 dan 3 mati")){
+                tglLampu1.setChecked(false);
+                tglLampu3.setChecked(false);
+            }else if (text.equals("lampu 2 dan 3 aktif")){
+                tglLampu2.setChecked(true);
+                tglLampu3.setChecked(true);
+            }else if (text.equals("lampu 2 dan 3 mati")){
+                tglLampu2.setChecked(false);
+                tglLampu3.setChecked(false);
+            }else if (text.equals("semua lampu aktif")){
+                tglLampu1.setChecked(true);
+                tglLampu2.setChecked(true);
+                tglLampu3.setChecked(true);
+            }else if (text.equals("semua lampu mati")){
+                tglLampu1.setChecked(false);
+                tglLampu2.setChecked(false);
+                tglLampu3.setChecked(false);
+            }
+            else {
                 Toast.makeText(this, "Perintah tidak dikenali !", Toast.LENGTH_LONG).show();
             }
+
+
 
         }
     }
