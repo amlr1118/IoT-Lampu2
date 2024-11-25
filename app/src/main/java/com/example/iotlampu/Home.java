@@ -60,6 +60,8 @@ public class Home extends AppCompatActivity {
     private ToggleButton tglLampu3;
     private ToggleButton tglLampu4;
 
+    private Button btnPetunjuk;
+
     private String id;
     private String onof;
 
@@ -121,6 +123,22 @@ public class Home extends AppCompatActivity {
         tglLampu1 = findViewById(R.id.tglLampu1);
         tglLampu2 = findViewById(R.id.tglLampu2);
         tglLampu3 = findViewById(R.id.tglLampu3);
+
+        btnPetunjuk = findViewById(R.id.btnPetunjuk);
+
+        btnPetunjuk.setOnClickListener(v -> {
+            alertFail("Daftar Perintah Suara yang Dikenali Untuk Menyalakan Lampu \n" +
+                    "1. Untuk mengaktifkan lampu 1 ucapkan perintah Lampu 1 Aktif \n" +
+                    "2. Untuk mengaktifkan lampu 2 ucapkan perintah Lampu 2 Aktif \n" +
+                    "3. Untuk mengaktifkan lampu 3 ucapakan perintah Lampu 3 Aktif \n" +
+                    "4. Untuk mengaktifkan semua lampu ucapkan perintah Semua Lampu Aktif \n" +
+                    " \n" +
+                    "Daftar Perintah Suara yang Dikenali Untuk Mematikan Lampu \n" +
+                    "1. Untuk mematikan lampu 1 ucapkan perintah Lampu 1 Mati \n " +
+                    "2. Untuk mematikan lampu 2 ucapkan perintah Lampu 2 Mati \n" +
+                    "3. Untuk mematikan lampu 3 ucapkan perintah Lampu 3 Mati \n" +
+                    "4. Untuk mematikan semua lampu ucapkan perintah Semua Lampu Mati","Information");
+        });
 
 
 
@@ -515,7 +533,7 @@ public class Home extends AppCompatActivity {
                             try {
                                 JSONObject response = new JSONObject(http.getResponse());
                                 String msg = response.getString("message");
-                                alertFail(""+msg);
+                                alertFail(""+msg,"Failed");
                                 //Toast.makeText(Register.this, ""+msg, Toast.LENGTH_LONG).show();
 
                             } catch (JSONException e) {
@@ -527,7 +545,7 @@ public class Home extends AppCompatActivity {
                             try {
                                 JSONObject response = new JSONObject(http.getResponse());
                                 String msg = response.getString("message");
-                                alertFail(""+msg);
+                                alertFail(""+msg,"Failed");
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -585,7 +603,7 @@ public class Home extends AppCompatActivity {
                             try {
                                 JSONObject response = new JSONObject(http.getResponse());
                                 String msg = response.getString("message");
-                                alertFail(""+msg);
+                                alertFail(""+msg,"Failed");
                                 //Toast.makeText(Register.this, ""+msg, Toast.LENGTH_LONG).show();
 
                             } catch (JSONException e) {
@@ -597,7 +615,7 @@ public class Home extends AppCompatActivity {
                             try {
                                 JSONObject response = new JSONObject(http.getResponse());
                                 String msg = response.getString("message");
-                                alertFail(""+msg);
+                                alertFail(""+msg,"Failed");
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -655,7 +673,7 @@ public class Home extends AppCompatActivity {
                             try {
                                 JSONObject response = new JSONObject(http.getResponse());
                                 String msg = response.getString("message");
-                                alertFail(""+msg);
+                                alertFail(""+msg,"Failed");
                                 //Toast.makeText(Register.this, ""+msg, Toast.LENGTH_LONG).show();
 
                             } catch (JSONException e) {
@@ -667,7 +685,7 @@ public class Home extends AppCompatActivity {
                             try {
                                 JSONObject response = new JSONObject(http.getResponse());
                                 String msg = response.getString("message");
-                                alertFail(""+msg);
+                                alertFail(""+msg,"Failed");
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -684,9 +702,9 @@ public class Home extends AppCompatActivity {
 
     }
 
-    private void alertFail(String s) {
+    private void alertFail(String s,String t) {
         new AlertDialog.Builder(this)
-                .setTitle("Failed")
+                .setTitle(t)
                 .setIcon(R.drawable.baseline_error_24)
                 .setMessage(s)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -761,8 +779,6 @@ public class Home extends AppCompatActivity {
             else {
                 Toast.makeText(this, "Perintah tidak dikenali !", Toast.LENGTH_LONG).show();
             }
-
-
 
         }
     }
