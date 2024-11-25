@@ -157,7 +157,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="8dp"
-                        android:text="Petunjuk Penggunaan"
+                        android:text="Petunjuk Penggunaan Perintah Suara"
                         android:textAllCaps="false"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"

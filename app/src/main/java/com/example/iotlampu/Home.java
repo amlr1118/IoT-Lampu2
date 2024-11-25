@@ -137,7 +137,25 @@ public class Home extends AppCompatActivity {
                     "1. Untuk mematikan lampu 1 ucapkan perintah Lampu 1 Mati \n " +
                     "2. Untuk mematikan lampu 2 ucapkan perintah Lampu 2 Mati \n" +
                     "3. Untuk mematikan lampu 3 ucapkan perintah Lampu 3 Mati \n" +
-                    "4. Untuk mematikan semua lampu ucapkan perintah Semua Lampu Mati","Information");
+                    "4. Untuk mematikan semua lampu ucapkan perintah Semua Lampu Mati" +
+                    " \n" +
+                    "Daftar Perintah Suara Lain yang Dikenali Untuk Menyalakan Lampu \n" +
+                    "1. Untuk mengaktifkan lampu 1 ucapkan perintah Lampu 1 Menyala \n" +
+                    "2. Untuk mengaktifkan lampu 2 ucapkan perintah Lampu 2 Menyala \n" +
+                    "3. Untuk mengaktifkan lampu 3 ucapakan perintah Lampu 3 Menyala \n" +
+                    "4. Untuk mengaktifkan semua lampu ucapkan perintah Semua Lampu Menyala \n" +
+                    " \n" +
+                    "Daftar Perintah Suara Lain yang Dikenali Untuk Mematikan Lampu \n" +
+                    "1. Untuk mematikan lampu 1 ucapkan perintah Lampu 1 Padam \n " +
+                    "2. Untuk mematikan lampu 2 ucapkan perintah Lampu 2 Padam \n" +
+                    "3. Untuk mematikan lampu 3 ucapkan perintah Lampu 3 Padam \n" +
+                    "4. Untuk mematikan semua lampu ucapkan perintah Semua Lampu Padam \n" +
+                    " \n" +
+                    "Daftar Perintah Suara yang Dikenali Untuk Mengaktifkan/Mematikan Lebih Dari Lampu \n" +
+                    "1. Untuk mengaktifkan/mematikan lampu 1 dan 2 ucapkan perintah Lampu 1 dan 2 Aktif/Mati \n" +
+                    "2. Untuk mengaktifkan/mematikan lampu 1 dan 3 ucapkan perintah Lampu 1 dan 3 Aktif/Mati \n" +
+                    "3. Untuk mengaktifkan/mematikan lampu 2 dan 3 ucapkan perintah Lampu 2 dan 3 Aktif/Mati \n" +
+                    " \n", "Information");
         });
 
 
@@ -739,15 +757,28 @@ public class Home extends AppCompatActivity {
             // Periksa teks dan aktifkan lampu yang sesuai
             if (text.equals("lampu 1 aktif")){
                 tglLampu1.setChecked(true);
+            }else if (text.equals("lampu 1 menyala")){
+                tglLampu1.setChecked(true);
+            }else if (text.equals("lampu 1 padam")){
+                tglLampu1.setChecked(false);
             }else if (text.equals("lampu 1 mati")){
                 tglLampu1.setChecked(false);
             }else if (text.equals("lampu 2 aktif")){
                 tglLampu2.setChecked(true);
+            } else if (text.equals("lampu 2 menyala")){
+                tglLampu2.setChecked(true);
+            } else if (text.equals("lampu 2 padam")){
+                tglLampu2.setChecked(false);
             } else if (text.equals("lampu 2 mati")){
                 tglLampu2.setChecked(false);
             } else if (text.equals("lampu 3 aktif")){
                 tglLampu3.setChecked(true);
-            } else if (text.equals("lampu 3 mati")){
+            } else if (text.equals("lampu 3 menyala")){
+                tglLampu3.setChecked(true);
+            } else if (text.equals("lampu 3 padam")){
+                tglLampu3.setChecked(false);
+            }
+            else if (text.equals("lampu 3 mati")){
                 tglLampu3.setChecked(false);
             }else if (text.equals("lampu 1 dan 2 aktif")){
                 tglLampu1.setChecked(true);
